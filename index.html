@@ -172,6 +172,42 @@ loadMarkdown("input/industries/README.md", "industriesDiv", "_parent");
   window.addEventListener('load', function(){ setTimeout(fixAll, 200); });
 })();
 </script>
+<script>
+// basic loader for parambase select
+async function loadParamYaml(url) {
+  try {
+    const txt = await fetch(url, { cache: "no-store" }).then(r => r.text());
+    const pre = document.querySelector('#paramText pre');
+    if (pre) pre.textContent = txt;
+  } catch (e) {
+    console.error('Failed to load params', e);
+  }
+}
+(function () {
+  const sel = document.getElementById('parambase');
+  if (!sel) return;
+
+  sel.addEventListener('change', () => {
+    const opt = sel.options[sel.selectedIndex];
+    const url = opt && opt.dataset && opt.dataset.url;
+    if (url) loadParamYaml(url);
+  });
+
+  // Support #parambase=Google+Data+Commons+(GDC)
+  const m = location.hash.match(/parambase=([^&]+)/);
+  if (m) {
+    const want = decodeURIComponent(m[1]).replace(/\+/g, ' ').trim();
+    for (const opt of sel.options) {
+      if (opt.text.trim() === want || opt.value.trim() === want) {
+        sel.value = opt.value;
+        sel.dispatchEvent(new Event('change'));
+        break;
+      }
+    }
+  }
+})();
+</script>
 </body>
 </html>
+
 
