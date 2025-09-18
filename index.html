@@ -13,7 +13,7 @@
 <!-- Load required scripts before the loadMarkdown calls -->
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
 
-<script src="../cloud/run/js/param-input.js"></script>
+
 
 
 <style>
@@ -38,11 +38,42 @@ button {
 
 
 <script>
-loadBaseParamsSelect(); // Resides in cloud/run/js/param-input.js
+// Resides in cloud/run/js/param-input.js
 loadMarkdown("README.md", "readmeDiv", "_parent");
 loadMarkdown("about.md", "aboutDiv", "_parent");
 loadMarkdown("input/blinks/README.md", "blinksDiv", "_parent");
 loadMarkdown("input/industries/README.md", "industriesDiv", "_parent");
+</script>
+<!-- param-input loader (tries your fork, then ModelEarth) -->
+<script>
+(function(){
+  var primary  = 'https://asheermogal.github.io/cloud/run/js/param-input.js';
+  var fallback = 'https://modelearth.github.io/cloud/run/js/param-input.js';
+
+  function runIfReady(){
+    if (typeof loadBaseParamsSelect === 'function') {
+      try { loadBaseParamsSelect(); } catch(e){ console.error(e); }
+    } else {
+      console.error('loadBaseParamsSelect not found after loading param-input.js');
+    }
+  }
+
+  function load(src, onload, onerror){
+    var s = document.createElement('script');
+    s.src = src;
+    s.defer = true;
+    s.onload = onload;
+    s.onerror = onerror;
+    document.head.appendChild(s);
+  }
+
+  load(primary, runIfReady, function(){
+    console.warn('Primary param-input.js failed, trying fallback...');
+    load(fallback, runIfReady, function(){
+      console.error('param-input.js failed from both primary and fallback.');
+    });
+  });
+})();
 </script>
 </head>
 
@@ -143,3 +174,4 @@ loadMarkdown("input/industries/README.md", "industriesDiv", "_parent");
 </script>
 </body>
 </html>
+
