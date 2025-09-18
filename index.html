@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en-us">
 <head>
 <meta charset="utf-8">
@@ -7,8 +7,8 @@
 <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link type="text/css" rel="stylesheet" href="/localsite/css/base.css" id="/localsite/css/base.css">
-<script type="text/javascript" src="/localsite/js/localsite.js?showheader=true"></script>
+<link type="text/css" rel="stylesheet" href="https://asheermogal.github.io/localsite/css/base.css" id="/localsite/css/base.css">
+<script type="text/javascript" src="https://asheermogal.github.io/localsite/js/localsite.js?showheader=true"></script>
 
 <!-- Load required scripts before the loadMarkdown calls -->
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
@@ -51,10 +51,10 @@ loadMarkdown("input/industries/README.md", "industriesDiv", "_parent");
 <div class="content contentpadding" style="position:relative;">
 
 <div style="position:absolute; z-index:2; right:28px; top:110px">
-  <a href="https://github.com/ModelEarth/realitystream/"><img src="../localsite/img/icon/github/github.png" style="width:42px"></a>
+  <a href="https://github.com/Asheermogal/realitystream/"><img src="../localsite/img/icon/github/github.png" style="width:42px"></a>
 </div>
 
-<a href="/projects">Active Projects</a>
+<a href="https://asheermogal.github.io/localsite/projects">Active Projects</a>
 <h1>RealityStream</h1>
 
 <select id="parambase"></select><br>
@@ -111,5 +111,35 @@ loadMarkdown("input/industries/README.md", "industriesDiv", "_parent");
 -->
 </div>
 
+<script>
+(function() {
+  var BASE = 'https://asheermogal.github.io/localsite/';
+  function fixNode(el, attr) {
+    var v = el.getAttribute(attr);
+    if (!v) return;
+    if (v.indexOf('http://localhost:8887/localsite/') === 0) {
+      el.setAttribute(attr, v.replace('http://localhost:8887/localsite/', BASE));
+    } else if (v.indexOf('/localsite/') === 0) {
+      el.setAttribute(attr, v.replace('/localsite/', BASE));
+    } else if (v.indexOf('/') === 0 && v.indexOf('/realitystream/') !== 0) {
+      // Any other root-absolute path -> localsite
+      el.setAttribute(attr, v.replace(/^\//, BASE));
+    }
+  }
+  function fixAll() {
+    document.querySelectorAll('[src],[href]').forEach(function(el){
+      fixNode(el, 'src');
+      fixNode(el, 'href');
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fixAll);
+  } else {
+    fixAll();
+  }
+  // Run once after full load too (in case late JS injects content)
+  window.addEventListener('load', function(){ setTimeout(fixAll, 200); });
+})();
+</script>
 </body>
 </html>
